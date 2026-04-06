@@ -237,6 +237,9 @@ func Build(rootDir, outDir string) error {
 
 	// 15. Generate index.html redirect to Home
 	homePath := cfg.Build.PageRoute + "/Home"
+	if cfg.Site.URL != "" {
+		homePath = cfg.Site.URL + homePath
+	}
 	indexHTML := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
