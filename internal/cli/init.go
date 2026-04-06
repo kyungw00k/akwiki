@@ -1,17 +1,18 @@
-package cmd
+package cli
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/kyungw00k/akwiki/internal/i18n"
 	"github.com/kyungw00k/akwiki/scaffold"
 	"github.com/spf13/cobra"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init [directory]",
-	Short: "Create a new wiki",
+	Short: i18n.T(i18n.MsgInitShort),
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dir := "."
@@ -46,7 +47,7 @@ func runInit(dir string) error {
 	}
 	for _, f := range files {
 		if _, err := os.Stat(f.dst); err == nil {
-			fmt.Printf("  skip %s (already exists)\n", f.dst)
+			fmt.Println(i18n.Tf(i18n.MsgInitSkip, f.dst))
 			continue
 		}
 		data, err := scaffold.Files.ReadFile(f.src)
@@ -56,12 +57,10 @@ func runInit(dir string) error {
 		if err := os.WriteFile(f.dst, data, 0o644); err != nil {
 			return err
 		}
-		fmt.Printf("  create %s\n", f.dst)
+		fmt.Println(i18n.Tf(i18n.MsgInitCreate, f.dst))
 	}
 
-	fmt.Printf("\nWiki initialized in %s\n", dir)
-	fmt.Println("Next steps:")
-	fmt.Println("  cd " + dir)
-	fmt.Println("  akwiki dev")
+	fmt.Println(i18n.Tf(i18n.MsgInitDone, dir))
+	fmt.Println(i18n.Tf(i18n.MsgInitNext, dir))
 	return nil
 }

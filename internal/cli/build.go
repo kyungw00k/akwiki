@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"fmt"
@@ -7,25 +7,26 @@ import (
 
 	"github.com/kyungw00k/akwiki/internal/builder"
 	"github.com/kyungw00k/akwiki/internal/config"
+	"github.com/kyungw00k/akwiki/internal/i18n"
 	"github.com/spf13/cobra"
 )
 
 var buildCmd = &cobra.Command{
 	Use:   "build",
-	Short: "Build static site",
+	Short: i18n.T(i18n.MsgBuildShort),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		rootDir := "."
 		cfg, err := config.Load(rootDir)
 		if err != nil {
-			return fmt.Errorf("load config: %w", err)
+			return fmt.Errorf(i18n.T(i18n.ErrConfigLoad), err)
 		}
 		outDir := filepath.Join(rootDir, cfg.Build.OutDir)
 		start := time.Now()
-		fmt.Println("Building wiki...")
+		fmt.Println(i18n.T(i18n.MsgBuildBuilding))
 		if err := builder.Build(rootDir, outDir); err != nil {
-			return err
+			return fmt.Errorf(i18n.T(i18n.ErrBuildFail), err)
 		}
-		fmt.Printf("Done in %s → %s/\n", time.Since(start).Round(time.Millisecond), outDir)
+		fmt.Println(i18n.Tf(i18n.MsgBuildDone, time.Since(start).Round(time.Millisecond), outDir))
 		return nil
 	},
 }

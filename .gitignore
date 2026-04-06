@@ -1,3 +1,4 @@
 dist/
-akwiki
-akwiki-*
+build/
+/akwiki
+/akwiki-*
