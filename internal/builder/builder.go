@@ -132,7 +132,7 @@ func Build(rootDir, outDir string) error {
 		p := &pages[i]
 
 		// a. Render markdown to HTML with link resolution
-		htmlBytes, err := render.RenderMarkdownWithResolver(p.RawBody, cfg.Build.PageRoute, linkResolver)
+		htmlBytes, err := render.RenderMarkdownWithResolver(p.RawBody, cfg.BasePath()+cfg.Build.PageRoute, linkResolver)
 		if err != nil {
 			return fmt.Errorf("render markdown for %s: %w", p.Name, err)
 		}
@@ -195,7 +195,7 @@ func Build(rootDir, outDir string) error {
 		jsonld := render.GenerateJSONLD(*p)
 
 		// g. Set page.RawURL
-		p.RawURL = cfg.Build.PageRoute + "/" + url.PathEscape(p.Name) + ".txt"
+		p.RawURL = cfg.BasePath() + cfg.Build.PageRoute + "/" + url.PathEscape(p.Name) + ".txt"
 
 		// h. Create TemplateContext and render
 		ctx := &render.TemplateContext{
@@ -236,10 +236,7 @@ func Build(rootDir, outDir string) error {
 	}
 
 	// 15. Generate index.html redirect to Home
-	homePath := cfg.Build.PageRoute + "/Home"
-	if cfg.Site.URL != "" {
-		homePath = cfg.Site.URL + homePath
-	}
+	homePath := cfg.BasePath() + cfg.Build.PageRoute + "/Home"
 	indexHTML := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>

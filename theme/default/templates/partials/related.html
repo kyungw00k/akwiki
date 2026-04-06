@@ -7,7 +7,7 @@
   <section>
     <h2>{{ relatedLabel $type }}</h2>
     <ul>
-      {{ range $pages }}<li><a href="{{ $.Site.Site.URL }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
+      {{ range $pages }}<li><a href="{{ $.Site.BasePath }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
     </ul>
   </section>
   {{ end }}
@@ -17,7 +17,7 @@
   <section>
     <h2>역링크</h2>
     <ul>
-      {{ range .Backlinks }}<li><a href="{{ $.Site.Site.URL }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
+      {{ range .Backlinks }}<li><a href="{{ $.Site.BasePath }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
     </ul>
   </section>
   {{ end }}

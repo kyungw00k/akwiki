@@ -1,8 +1,10 @@
 package config
 
 import (
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -72,6 +74,20 @@ type FooterLink struct {
 
 type ThemeEdit struct {
 	URL string `yaml:"url"`
+}
+
+// BasePath returns the path component from Site.URL (e.g., "/akwiki" from "https://kyungw00k.dev/akwiki").
+// Returns "" if URL is not set or has no path.
+func (c Config) BasePath() string {
+	if c.Site.URL == "" {
+		return ""
+	}
+	u, err := url.Parse(c.Site.URL)
+	if err != nil {
+		return ""
+	}
+	p := strings.TrimRight(u.Path, "/")
+	return p
 }
 
 // rawThemeLayout uses pointers to distinguish between "not set" and explicit false.
