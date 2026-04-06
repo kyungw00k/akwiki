@@ -2,3 +2,5 @@ dist/
 build/
 /akwiki
 /akwiki-*
+.tmp-test/
+specs/report/

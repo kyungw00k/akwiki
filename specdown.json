@@ -1,0 +1,7 @@
+{
+  "entry": "specs/index.spec.md",
+  "report": {
+    "html": "specs/report/index.html",
+    "json": "specs/report/report.json"
+  }
+}

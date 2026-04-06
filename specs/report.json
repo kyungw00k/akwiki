@@ -1,0 +1,4532 @@
+{
+  "schemaVersion": 2,
+  "title": "akwiki",
+  "generatedAt": "2026-04-06T13:30:48.432547+09:00",
+  "results": [
+    {
+      "document": {
+        "relativeTo": "specs/index.spec.md",
+        "title": "akwiki",
+        "markdown": "---\ntype: spec\n---\n\n# akwiki\n\n개인 위키 정적 사이트 생성기. 마크다운 파일로 wiki.g15e.com과 동일한 형태의 위키를 구축한다.\n\n- [CLI](cli.spec.md) — 커맨드 라인 인터페이스\n- [Build](build.spec.md) — 빌드 파이프라인\n- [Content](content.spec.md) — 콘텐츠 모델과 위키링크\n- [Theme](theme.spec.md) — 테마 시스템\n",
+        "nodes": [
+          {
+            "level": 1,
+            "text": "akwiki",
+            "raw": "# akwiki\n",
+            "headingPath": [
+              "akwiki"
+            ]
+          },
+          {
+            "raw": "\n개인 위키 정적 사이트 생성기. 마크다운 파일로 wiki.g15e.com과 동일한 형태의 위키를 구축한다.\n\n- [CLI](cli.spec.md) — 커맨드 라인 인터페이스\n- [Build](build.spec.md) — 빌드 파이프라인\n- [Content](content.spec.md) — 콘텐츠 모델과 위키링크\n- [Theme](theme.spec.md) — 테마 시스템\n",
+            "headingPath": [
+              "akwiki"
+            ]
+          }
+        ],
+        "frontmatter": {
+          "type": "spec"
+        }
+      },
+      "status": "passed"
+    },
+    {
+      "document": {
+        "relativeTo": "specs/cli.spec.md",
+        "title": "CLI",
+        "markdown": "---\ntype: spec\nworkdir: .tmp-test\ntimeout: 30000\n---\n\n# CLI\n\nakwiki는 4개의 커맨드를 제공한다: `init`, `build`, `dev`, `serve`.\n\n## setup\n\n테스트용 바이너리 경로를 확인한다.\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ntest -x \"$AKWIKI\"\n```\n\n## version\n\n버전 정보를 출력한다.\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI --version\n```\n\n$ akwiki version ...\n\n## init\n\n새 위키 디렉토리를 초기화한다.\n\n### 기본 구조 생성\n\n빈 디렉토리에 위키를 초기화하면 표준 디렉토리 구조가 생성된다.\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf wiki-test \u0026\u0026 mkdir wiki-test\n$AKWIKI init wiki-test\n```\n\n### 필수 파일 확인\n\n초기화된 위키에는 다음 파일이 존재해야 한다.\n\n```run:shell\ntest -f wiki-test/pages/Home.md\ntest -f wiki-test/.akwiki/config.yml\ntest -f wiki-test/.github/workflows/deploy.yml\n```\n\n### 필수 디렉토리 확인\n\n```run:shell\ntest -d wiki-test/pages\ntest -d wiki-test/public\ntest -d wiki-test/.akwiki\n```\n\n### 홈 페이지 내용\n\nHome.md에는 위키 안내가 포함되어야 한다.\n\n```run:shell\ngrep '위키' wiki-test/pages/Home.md\n```\n\n$ ...위키...\n\n### 이미 존재하는 파일은 건너뛰기\n\n같은 디렉토리에 다시 init을 실행하면 기존 파일을 건너뛴다.\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI init wiki-test 2\u003e\u00261 | grep -c -E 'skip|건너뜀'\n```\n\n$ 3\n\n## build\n\n정적 사이트를 생성한다.\n\n### 빌드 준비\n\n빌드에는 git 이력이 필요하다 (날짜 추출용).\n\n```run:shell\ncd wiki-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q\n```\n\n### 빌드 실행\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd wiki-test \u0026\u0026 $AKWIKI build\n```\n\n### 출력 파일 확인\n\n빌드 결과물에는 HTML 페이지, 원본 마크다운, 검색 인덱스, CSS, JS가 포함된다.\n\n```run:shell\ntest -f wiki-test/dist/index.html\ntest -f wiki-test/dist/pages/Home/index.html\ntest -f wiki-test/dist/pages/Home.txt\ntest -f wiki-test/dist/search-index.json\ntest -f wiki-test/dist/assets/style.css\ntest -f wiki-test/dist/assets/search.js\n```\n\n### 크레딧 포함\n\n빌드된 페이지에는 akngs 위키에서 영감을 받았다는 크레딧이 포함된다.\n\n```run:shell\ngrep 'akngs' wiki-test/dist/pages/Home/index.html\n```\n\n$ ...akngs...\n\n## teardown\n\n```run:shell\nrm -rf wiki-test\n```\n",
+        "nodes": [
+          {
+            "level": 1,
+            "text": "CLI",
+            "raw": "# CLI\n",
+            "headingPath": [
+              "CLI"
+            ]
+          },
+          {
+            "raw": "\nakwiki는 4개의 커맨드를 제공한다: `init`, `build`, `dev`, `serve`.\n\n",
+            "headingPath": [
+              "CLI"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "setup",
+            "raw": "## setup\n",
+            "headingPath": [
+              "CLI",
+              "setup"
+            ]
+          },
+          {
+            "raw": "\n테스트용 바이너리 경로를 확인한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "setup"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ntest -x \"$AKWIKI\"",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ntest -x \"$AKWIKI\"\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "setup"
+              ],
+              "ordinal": 1,
+              "line": 15
+            }
+          },
+          {
+            "level": 2,
+            "text": "version",
+            "raw": "## version\n",
+            "headingPath": [
+              "CLI",
+              "version"
+            ]
+          },
+          {
+            "raw": "\n버전 정보를 출력한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "version"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI --version",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI --version\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "version"
+              ],
+              "ordinal": 2,
+              "line": 24
+            }
+          },
+          {
+            "raw": "\n$ akwiki version ...\n\n",
+            "headingPath": [
+              "CLI",
+              "version"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "init",
+            "raw": "## init\n",
+            "headingPath": [
+              "CLI",
+              "init"
+            ]
+          },
+          {
+            "raw": "\n새 위키 디렉토리를 초기화한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "init"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "기본 구조 생성",
+            "raw": "### 기본 구조 생성\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "기본 구조 생성"
+            ]
+          },
+          {
+            "raw": "\n빈 디렉토리에 위키를 초기화하면 표준 디렉토리 구조가 생성된다.\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "기본 구조 생성"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf wiki-test \u0026\u0026 mkdir wiki-test\n$AKWIKI init wiki-test",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf wiki-test \u0026\u0026 mkdir wiki-test\n$AKWIKI init wiki-test\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "init",
+                "기본 구조 생성"
+              ],
+              "ordinal": 3,
+              "line": 39
+            }
+          },
+          {
+            "level": 3,
+            "text": "필수 파일 확인",
+            "raw": "### 필수 파일 확인\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "필수 파일 확인"
+            ]
+          },
+          {
+            "raw": "\n초기화된 위키에는 다음 파일이 존재해야 한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "필수 파일 확인"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f wiki-test/pages/Home.md\ntest -f wiki-test/.akwiki/config.yml\ntest -f wiki-test/.github/workflows/deploy.yml",
+            "raw": "```run:shell\ntest -f wiki-test/pages/Home.md\ntest -f wiki-test/.akwiki/config.yml\ntest -f wiki-test/.github/workflows/deploy.yml\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "init",
+                "필수 파일 확인"
+              ],
+              "ordinal": 4,
+              "line": 49
+            }
+          },
+          {
+            "level": 3,
+            "text": "필수 디렉토리 확인",
+            "raw": "### 필수 디렉토리 확인\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "필수 디렉토리 확인"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -d wiki-test/pages\ntest -d wiki-test/public\ntest -d wiki-test/.akwiki",
+            "raw": "```run:shell\ntest -d wiki-test/pages\ntest -d wiki-test/public\ntest -d wiki-test/.akwiki\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "init",
+                "필수 디렉토리 확인"
+              ],
+              "ordinal": 5,
+              "line": 57
+            }
+          },
+          {
+            "level": 3,
+            "text": "홈 페이지 내용",
+            "raw": "### 홈 페이지 내용\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "홈 페이지 내용"
+            ]
+          },
+          {
+            "raw": "\nHome.md에는 위키 안내가 포함되어야 한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "홈 페이지 내용"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '위키' wiki-test/pages/Home.md",
+            "raw": "```run:shell\ngrep '위키' wiki-test/pages/Home.md\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "init",
+                "홈 페이지 내용"
+              ],
+              "ordinal": 6,
+              "line": 67
+            }
+          },
+          {
+            "raw": "\n$ ...위키...\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "홈 페이지 내용"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "이미 존재하는 파일은 건너뛰기",
+            "raw": "### 이미 존재하는 파일은 건너뛰기\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "이미 존재하는 파일은 건너뛰기"
+            ]
+          },
+          {
+            "raw": "\n같은 디렉토리에 다시 init을 실행하면 기존 파일을 건너뛴다.\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "이미 존재하는 파일은 건너뛰기"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI init wiki-test 2\u003e\u00261 | grep -c -E 'skip|건너뜀'",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI init wiki-test 2\u003e\u00261 | grep -c -E 'skip|건너뜀'\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "init",
+                "이미 존재하는 파일은 건너뛰기"
+              ],
+              "ordinal": 7,
+              "line": 77
+            }
+          },
+          {
+            "raw": "\n$ 3\n\n",
+            "headingPath": [
+              "CLI",
+              "init",
+              "이미 존재하는 파일은 건너뛰기"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "build",
+            "raw": "## build\n",
+            "headingPath": [
+              "CLI",
+              "build"
+            ]
+          },
+          {
+            "raw": "\n정적 사이트를 생성한다.\n\n",
+            "headingPath": [
+              "CLI",
+              "build"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "빌드 준비",
+            "raw": "### 빌드 준비\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "빌드 준비"
+            ]
+          },
+          {
+            "raw": "\n빌드에는 git 이력이 필요하다 (날짜 추출용).\n\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "빌드 준비"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cd wiki-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q",
+            "raw": "```run:shell\ncd wiki-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "build",
+                "빌드 준비"
+              ],
+              "ordinal": 8,
+              "line": 92
+            }
+          },
+          {
+            "level": 3,
+            "text": "빌드 실행",
+            "raw": "### 빌드 실행\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "빌드 실행"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd wiki-test \u0026\u0026 $AKWIKI build",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd wiki-test \u0026\u0026 $AKWIKI build\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "build",
+                "빌드 실행"
+              ],
+              "ordinal": 9,
+              "line": 98
+            }
+          },
+          {
+            "level": 3,
+            "text": "출력 파일 확인",
+            "raw": "### 출력 파일 확인\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "출력 파일 확인"
+            ]
+          },
+          {
+            "raw": "\n빌드 결과물에는 HTML 페이지, 원본 마크다운, 검색 인덱스, CSS, JS가 포함된다.\n\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "출력 파일 확인"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f wiki-test/dist/index.html\ntest -f wiki-test/dist/pages/Home/index.html\ntest -f wiki-test/dist/pages/Home.txt\ntest -f wiki-test/dist/search-index.json\ntest -f wiki-test/dist/assets/style.css\ntest -f wiki-test/dist/assets/search.js",
+            "raw": "```run:shell\ntest -f wiki-test/dist/index.html\ntest -f wiki-test/dist/pages/Home/index.html\ntest -f wiki-test/dist/pages/Home.txt\ntest -f wiki-test/dist/search-index.json\ntest -f wiki-test/dist/assets/style.css\ntest -f wiki-test/dist/assets/search.js\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "build",
+                "출력 파일 확인"
+              ],
+              "ordinal": 10,
+              "line": 107
+            }
+          },
+          {
+            "level": 3,
+            "text": "크레딧 포함",
+            "raw": "### 크레딧 포함\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "크레딧 포함"
+            ]
+          },
+          {
+            "raw": "\n빌드된 페이지에는 akngs 위키에서 영감을 받았다는 크레딧이 포함된다.\n\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "크레딧 포함"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'akngs' wiki-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep 'akngs' wiki-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "build",
+                "크레딧 포함"
+              ],
+              "ordinal": 11,
+              "line": 120
+            }
+          },
+          {
+            "raw": "\n$ ...akngs...\n\n",
+            "headingPath": [
+              "CLI",
+              "build",
+              "크레딧 포함"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "teardown",
+            "raw": "## teardown\n",
+            "headingPath": [
+              "CLI",
+              "teardown"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf wiki-test",
+            "raw": "```run:shell\nrm -rf wiki-test\n```\n",
+            "id": {
+              "file": "specs/cli.spec.md",
+              "headingPath": [
+                "CLI",
+                "teardown"
+              ],
+              "ordinal": 12,
+              "line": 128
+            }
+          }
+        ],
+        "frontmatter": {
+          "timeout": 30000,
+          "type": "spec",
+          "workdir": ".tmp-test"
+        }
+      },
+      "status": "passed",
+      "cases": [
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "setup"
+            ],
+            "ordinal": 1,
+            "line": 15
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ setup",
+          "durationMs": 15,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 15
+              },
+              "label": "run:shell @ setup"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 15
+              },
+              "label": "run:shell @ setup"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ntest -x \"$AKWIKI\"",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ntest -x \"$AKWIKI\""
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "version"
+            ],
+            "ordinal": 2,
+            "line": 24
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ version",
+          "durationMs": 26,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "version"
+                ],
+                "ordinal": 2,
+                "line": 24
+              },
+              "label": "run:shell @ version"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "version"
+                ],
+                "ordinal": 2,
+                "line": 24
+              },
+              "label": "run:shell @ version"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI --version",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI --version"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "init",
+              "기본 구조 생성"
+            ],
+            "ordinal": 3,
+            "line": 39
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 구조 생성",
+          "durationMs": 39,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "기본 구조 생성"
+                ],
+                "ordinal": 3,
+                "line": 39
+              },
+              "label": "run:shell @ 기본 구조 생성"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "기본 구조 생성"
+                ],
+                "ordinal": 3,
+                "line": 39
+              },
+              "label": "run:shell @ 기본 구조 생성"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf wiki-test \u0026\u0026 mkdir wiki-test\n$AKWIKI init wiki-test",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf wiki-test \u0026\u0026 mkdir wiki-test\n$AKWIKI init wiki-test"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "init",
+              "필수 파일 확인"
+            ],
+            "ordinal": 4,
+            "line": 49
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 필수 파일 확인",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "필수 파일 확인"
+                ],
+                "ordinal": 4,
+                "line": 49
+              },
+              "label": "run:shell @ 필수 파일 확인"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "필수 파일 확인"
+                ],
+                "ordinal": 4,
+                "line": 49
+              },
+              "label": "run:shell @ 필수 파일 확인"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f wiki-test/pages/Home.md\ntest -f wiki-test/.akwiki/config.yml\ntest -f wiki-test/.github/workflows/deploy.yml",
+            "renderedSource": "test -f wiki-test/pages/Home.md\ntest -f wiki-test/.akwiki/config.yml\ntest -f wiki-test/.github/workflows/deploy.yml"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "init",
+              "필수 디렉토리 확인"
+            ],
+            "ordinal": 5,
+            "line": 57
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 필수 디렉토리 확인",
+          "durationMs": 12,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "필수 디렉토리 확인"
+                ],
+                "ordinal": 5,
+                "line": 57
+              },
+              "label": "run:shell @ 필수 디렉토리 확인"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "필수 디렉토리 확인"
+                ],
+                "ordinal": 5,
+                "line": 57
+              },
+              "label": "run:shell @ 필수 디렉토리 확인"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -d wiki-test/pages\ntest -d wiki-test/public\ntest -d wiki-test/.akwiki",
+            "renderedSource": "test -d wiki-test/pages\ntest -d wiki-test/public\ntest -d wiki-test/.akwiki"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "init",
+              "홈 페이지 내용"
+            ],
+            "ordinal": 6,
+            "line": 67
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 홈 페이지 내용",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "홈 페이지 내용"
+                ],
+                "ordinal": 6,
+                "line": 67
+              },
+              "label": "run:shell @ 홈 페이지 내용"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "홈 페이지 내용"
+                ],
+                "ordinal": 6,
+                "line": 67
+              },
+              "label": "run:shell @ 홈 페이지 내용"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '위키' wiki-test/pages/Home.md",
+            "renderedSource": "grep '위키' wiki-test/pages/Home.md"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "init",
+              "이미 존재하는 파일은 건너뛰기"
+            ],
+            "ordinal": 7,
+            "line": 77
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 이미 존재하는 파일은 건너뛰기",
+          "durationMs": 25,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "이미 존재하는 파일은 건너뛰기"
+                ],
+                "ordinal": 7,
+                "line": 77
+              },
+              "label": "run:shell @ 이미 존재하는 파일은 건너뛰기"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "init",
+                  "이미 존재하는 파일은 건너뛰기"
+                ],
+                "ordinal": 7,
+                "line": 77
+              },
+              "label": "run:shell @ 이미 존재하는 파일은 건너뛰기"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI init wiki-test 2\u003e\u00261 | grep -c -E 'skip|건너뜀'",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\n$AKWIKI init wiki-test 2\u003e\u00261 | grep -c -E 'skip|건너뜀'"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "build",
+              "빌드 준비"
+            ],
+            "ordinal": 8,
+            "line": 92
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 빌드 준비",
+          "durationMs": 62,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "빌드 준비"
+                ],
+                "ordinal": 8,
+                "line": 92
+              },
+              "label": "run:shell @ 빌드 준비"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "빌드 준비"
+                ],
+                "ordinal": 8,
+                "line": 92
+              },
+              "label": "run:shell @ 빌드 준비"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cd wiki-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q",
+            "renderedSource": "cd wiki-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "build",
+              "빌드 실행"
+            ],
+            "ordinal": 9,
+            "line": 98
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 빌드 실행",
+          "durationMs": 48,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "빌드 실행"
+                ],
+                "ordinal": 9,
+                "line": 98
+              },
+              "label": "run:shell @ 빌드 실행"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "빌드 실행"
+                ],
+                "ordinal": 9,
+                "line": 98
+              },
+              "label": "run:shell @ 빌드 실행"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd wiki-test \u0026\u0026 $AKWIKI build",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd wiki-test \u0026\u0026 $AKWIKI build"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "build",
+              "출력 파일 확인"
+            ],
+            "ordinal": 10,
+            "line": 107
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 출력 파일 확인",
+          "durationMs": 15,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "출력 파일 확인"
+                ],
+                "ordinal": 10,
+                "line": 107
+              },
+              "label": "run:shell @ 출력 파일 확인"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "출력 파일 확인"
+                ],
+                "ordinal": 10,
+                "line": 107
+              },
+              "label": "run:shell @ 출력 파일 확인"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f wiki-test/dist/index.html\ntest -f wiki-test/dist/pages/Home/index.html\ntest -f wiki-test/dist/pages/Home.txt\ntest -f wiki-test/dist/search-index.json\ntest -f wiki-test/dist/assets/style.css\ntest -f wiki-test/dist/assets/search.js",
+            "renderedSource": "test -f wiki-test/dist/index.html\ntest -f wiki-test/dist/pages/Home/index.html\ntest -f wiki-test/dist/pages/Home.txt\ntest -f wiki-test/dist/search-index.json\ntest -f wiki-test/dist/assets/style.css\ntest -f wiki-test/dist/assets/search.js"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "build",
+              "크레딧 포함"
+            ],
+            "ordinal": 11,
+            "line": 120
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 크레딧 포함",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "크레딧 포함"
+                ],
+                "ordinal": 11,
+                "line": 120
+              },
+              "label": "run:shell @ 크레딧 포함"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "build",
+                  "크레딧 포함"
+                ],
+                "ordinal": 11,
+                "line": 120
+              },
+              "label": "run:shell @ 크레딧 포함"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'akngs' wiki-test/dist/pages/Home/index.html",
+            "renderedSource": "grep 'akngs' wiki-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/cli.spec.md",
+            "headingPath": [
+              "CLI",
+              "teardown"
+            ],
+            "ordinal": 12,
+            "line": 128
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ teardown",
+          "durationMs": 26,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "teardown"
+                ],
+                "ordinal": 12,
+                "line": 128
+              },
+              "label": "run:shell @ teardown"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/cli.spec.md",
+                "headingPath": [
+                  "CLI",
+                  "teardown"
+                ],
+                "ordinal": 12,
+                "line": 128
+              },
+              "label": "run:shell @ teardown"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf wiki-test",
+            "renderedSource": "rm -rf wiki-test"
+          }
+        }
+      ]
+    },
+    {
+      "document": {
+        "relativeTo": "specs/build.spec.md",
+        "title": "Build",
+        "markdown": "---\ntype: spec\nworkdir: .tmp-test\ntimeout: 30000\n---\n\n# Build\n\nakwiki 빌드 파이프라인은 마크다운 파일을 정적 HTML 사이트로 변환한다.\n\n## setup\n\n테스트용 위키를 준비한다.\n\n```run:shell\nrm -rf build-test \u0026\u0026 mkdir -p build-test/pages build-test/public build-test/.akwiki\ncat \u003e build-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"테스트 위키\"\n  author: \"tester\"\n  language: \"ko\"\nEOF\n```\n\n## 페이지 렌더링\n\n### 기본 페이지\n\n마크다운 파일이 HTML 페이지로 변환된다.\n\n```run:shell\ncat \u003e build-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다 :)\n\n[[About]] 페이지를 참고하세요.\nEOF\n\ncat \u003e build-test/pages/About.md \u003c\u003c 'EOF'\n---\ntitle: About\ntitleKo: 소개\ntype: Article\n---\n\n# About\n\n이 위키는 [[Home|홈]]에서 시작합니다.\nEOF\n```\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n\n각 페이지는 `/pages/{name}/index.html` 경로에 생성된다.\n\n```run:shell\ntest -f build-test/dist/pages/Home/index.html\ntest -f build-test/dist/pages/About/index.html\n```\n\n### Private 페이지 제외\n\n`private: true`인 페이지는 빌드에서 완전히 제외된다.\n\n```run:shell\ncat \u003e build-test/pages/Secret.md \u003c\u003c 'EOF'\n---\ntitle: Secret\nprivate: true\n---\n\n비밀 내용.\nEOF\n```\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git add . \u0026\u0026 git commit -m \"add secret\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n\n```run:shell\ntest ! -f build-test/dist/pages/Secret/index.html\n```\n\n## 위키링크\n\n### 내부 링크\n\n`[[페이지명]]` 문법이 HTML 링크로 변환된다.\n\n```run:shell\ngrep 'class=\"wikilink\"' build-test/dist/pages/Home/index.html\n```\n\n$ ...wikilink...\n\n### 표시 텍스트\n\n`[[페이지명|표시 텍스트]]` 문법으로 표시 텍스트를 지정할 수 있다.\n\n```run:shell\ngrep '홈' build-test/dist/pages/About/index.html\n```\n\n$ ...홈...\n\n## 원본 마크다운\n\n각 페이지의 마크다운 원본이 `.txt` 확장자로 제공된다.\n\n```run:shell\ntest -f build-test/dist/pages/Home.txt\ntest -f build-test/dist/pages/About.txt\n```\n\n## 검색 인덱스\n\n빌드 시 클라이언트 검색용 JSON 인덱스가 생성된다.\n\n```run:shell\ntest -f build-test/dist/search-index.json\n```\n\n인덱스에는 각 페이지의 제목이 포함된다.\n\n```run:shell\ncat build-test/dist/search-index.json | grep '\"title\"'\n```\n\n$ ...Home...\n$ ...About...\n\n## 홈 리다이렉트\n\n루트 index.html은 /pages/Home으로 리다이렉트한다.\n\n```run:shell\ngrep 'Home' build-test/dist/index.html\n```\n\n$ ...Home...\n\n## teardown\n\n```run:shell\nrm -rf build-test\n```\n",
+        "nodes": [
+          {
+            "level": 1,
+            "text": "Build",
+            "raw": "# Build\n",
+            "headingPath": [
+              "Build"
+            ]
+          },
+          {
+            "raw": "\nakwiki 빌드 파이프라인은 마크다운 파일을 정적 HTML 사이트로 변환한다.\n\n",
+            "headingPath": [
+              "Build"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "setup",
+            "raw": "## setup\n",
+            "headingPath": [
+              "Build",
+              "setup"
+            ]
+          },
+          {
+            "raw": "\n테스트용 위키를 준비한다.\n\n",
+            "headingPath": [
+              "Build",
+              "setup"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf build-test \u0026\u0026 mkdir -p build-test/pages build-test/public build-test/.akwiki\ncat \u003e build-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"테스트 위키\"\n  author: \"tester\"\n  language: \"ko\"\nEOF",
+            "raw": "```run:shell\nrm -rf build-test \u0026\u0026 mkdir -p build-test/pages build-test/public build-test/.akwiki\ncat \u003e build-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"테스트 위키\"\n  author: \"tester\"\n  language: \"ko\"\nEOF\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "setup"
+              ],
+              "ordinal": 1,
+              "line": 15
+            }
+          },
+          {
+            "level": 2,
+            "text": "페이지 렌더링",
+            "raw": "## 페이지 렌더링\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "기본 페이지",
+            "raw": "### 기본 페이지\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ]
+          },
+          {
+            "raw": "\n마크다운 파일이 HTML 페이지로 변환된다.\n\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cat \u003e build-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다 :)\n\n[[About]] 페이지를 참고하세요.\nEOF\n\ncat \u003e build-test/pages/About.md \u003c\u003c 'EOF'\n---\ntitle: About\ntitleKo: 소개\ntype: Article\n---\n\n# About\n\n이 위키는 [[Home|홈]]에서 시작합니다.\nEOF",
+            "raw": "```run:shell\ncat \u003e build-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다 :)\n\n[[About]] 페이지를 참고하세요.\nEOF\n\ncat \u003e build-test/pages/About.md \u003c\u003c 'EOF'\n---\ntitle: About\ntitleKo: 소개\ntype: Article\n---\n\n# About\n\n이 위키는 [[Home|홈]]에서 시작합니다.\nEOF\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "기본 페이지"
+              ],
+              "ordinal": 2,
+              "line": 31
+            }
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "기본 페이지"
+              ],
+              "ordinal": 3,
+              "line": 58
+            }
+          },
+          {
+            "raw": "\n각 페이지는 `/pages/{name}/index.html` 경로에 생성된다.\n\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f build-test/dist/pages/Home/index.html\ntest -f build-test/dist/pages/About/index.html",
+            "raw": "```run:shell\ntest -f build-test/dist/pages/Home/index.html\ntest -f build-test/dist/pages/About/index.html\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "기본 페이지"
+              ],
+              "ordinal": 4,
+              "line": 65
+            }
+          },
+          {
+            "level": 3,
+            "text": "Private 페이지 제외",
+            "raw": "### Private 페이지 제외\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "Private 페이지 제외"
+            ]
+          },
+          {
+            "raw": "\n`private: true`인 페이지는 빌드에서 완전히 제외된다.\n\n",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "Private 페이지 제외"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cat \u003e build-test/pages/Secret.md \u003c\u003c 'EOF'\n---\ntitle: Secret\nprivate: true\n---\n\n비밀 내용.\nEOF",
+            "raw": "```run:shell\ncat \u003e build-test/pages/Secret.md \u003c\u003c 'EOF'\n---\ntitle: Secret\nprivate: true\n---\n\n비밀 내용.\nEOF\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "Private 페이지 제외"
+              ],
+              "ordinal": 5,
+              "line": 74
+            }
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git add . \u0026\u0026 git commit -m \"add secret\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git add . \u0026\u0026 git commit -m \"add secret\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "Private 페이지 제외"
+              ],
+              "ordinal": 6,
+              "line": 85
+            }
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test ! -f build-test/dist/pages/Secret/index.html",
+            "raw": "```run:shell\ntest ! -f build-test/dist/pages/Secret/index.html\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "페이지 렌더링",
+                "Private 페이지 제외"
+              ],
+              "ordinal": 7,
+              "line": 90
+            }
+          },
+          {
+            "level": 2,
+            "text": "위키링크",
+            "raw": "## 위키링크\n",
+            "headingPath": [
+              "Build",
+              "위키링크"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "내부 링크",
+            "raw": "### 내부 링크\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "내부 링크"
+            ]
+          },
+          {
+            "raw": "\n`[[페이지명]]` 문법이 HTML 링크로 변환된다.\n\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "내부 링크"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'class=\"wikilink\"' build-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep 'class=\"wikilink\"' build-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "위키링크",
+                "내부 링크"
+              ],
+              "ordinal": 8,
+              "line": 100
+            }
+          },
+          {
+            "raw": "\n$ ...wikilink...\n\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "내부 링크"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "표시 텍스트",
+            "raw": "### 표시 텍스트\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "표시 텍스트"
+            ]
+          },
+          {
+            "raw": "\n`[[페이지명|표시 텍스트]]` 문법으로 표시 텍스트를 지정할 수 있다.\n\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "표시 텍스트"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '홈' build-test/dist/pages/About/index.html",
+            "raw": "```run:shell\ngrep '홈' build-test/dist/pages/About/index.html\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "위키링크",
+                "표시 텍스트"
+              ],
+              "ordinal": 9,
+              "line": 110
+            }
+          },
+          {
+            "raw": "\n$ ...홈...\n\n",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "표시 텍스트"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "원본 마크다운",
+            "raw": "## 원본 마크다운\n",
+            "headingPath": [
+              "Build",
+              "원본 마크다운"
+            ]
+          },
+          {
+            "raw": "\n각 페이지의 마크다운 원본이 `.txt` 확장자로 제공된다.\n\n",
+            "headingPath": [
+              "Build",
+              "원본 마크다운"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f build-test/dist/pages/Home.txt\ntest -f build-test/dist/pages/About.txt",
+            "raw": "```run:shell\ntest -f build-test/dist/pages/Home.txt\ntest -f build-test/dist/pages/About.txt\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "원본 마크다운"
+              ],
+              "ordinal": 10,
+              "line": 120
+            }
+          },
+          {
+            "level": 2,
+            "text": "검색 인덱스",
+            "raw": "## 검색 인덱스\n",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ]
+          },
+          {
+            "raw": "\n빌드 시 클라이언트 검색용 JSON 인덱스가 생성된다.\n\n",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f build-test/dist/search-index.json",
+            "raw": "```run:shell\ntest -f build-test/dist/search-index.json\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "검색 인덱스"
+              ],
+              "ordinal": 11,
+              "line": 129
+            }
+          },
+          {
+            "raw": "\n인덱스에는 각 페이지의 제목이 포함된다.\n\n",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cat build-test/dist/search-index.json | grep '\"title\"'",
+            "raw": "```run:shell\ncat build-test/dist/search-index.json | grep '\"title\"'\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "검색 인덱스"
+              ],
+              "ordinal": 12,
+              "line": 135
+            }
+          },
+          {
+            "raw": "\n$ ...Home...\n$ ...About...\n\n",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "홈 리다이렉트",
+            "raw": "## 홈 리다이렉트\n",
+            "headingPath": [
+              "Build",
+              "홈 리다이렉트"
+            ]
+          },
+          {
+            "raw": "\n루트 index.html은 /pages/Home으로 리다이렉트한다.\n\n",
+            "headingPath": [
+              "Build",
+              "홈 리다이렉트"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'Home' build-test/dist/index.html",
+            "raw": "```run:shell\ngrep 'Home' build-test/dist/index.html\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "홈 리다이렉트"
+              ],
+              "ordinal": 13,
+              "line": 146
+            }
+          },
+          {
+            "raw": "\n$ ...Home...\n\n",
+            "headingPath": [
+              "Build",
+              "홈 리다이렉트"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "teardown",
+            "raw": "## teardown\n",
+            "headingPath": [
+              "Build",
+              "teardown"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf build-test",
+            "raw": "```run:shell\nrm -rf build-test\n```\n",
+            "id": {
+              "file": "specs/build.spec.md",
+              "headingPath": [
+                "Build",
+                "teardown"
+              ],
+              "ordinal": 14,
+              "line": 154
+            }
+          }
+        ],
+        "frontmatter": {
+          "timeout": 30000,
+          "type": "spec",
+          "workdir": ".tmp-test"
+        }
+      },
+      "status": "passed",
+      "cases": [
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "setup"
+            ],
+            "ordinal": 1,
+            "line": 15
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ setup",
+          "durationMs": 37,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 15
+              },
+              "label": "run:shell @ setup"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 15
+              },
+              "label": "run:shell @ setup"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf build-test \u0026\u0026 mkdir -p build-test/pages build-test/public build-test/.akwiki\ncat \u003e build-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"테스트 위키\"\n  author: \"tester\"\n  language: \"ko\"\nEOF",
+            "renderedSource": "rm -rf build-test \u0026\u0026 mkdir -p build-test/pages build-test/public build-test/.akwiki\ncat \u003e build-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"테스트 위키\"\n  author: \"tester\"\n  language: \"ko\"\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ],
+            "ordinal": 2,
+            "line": 31
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 페이지",
+          "durationMs": 29,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 2,
+                "line": 31
+              },
+              "label": "run:shell @ 기본 페이지"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 2,
+                "line": 31
+              },
+              "label": "run:shell @ 기본 페이지"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cat \u003e build-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다 :)\n\n[[About]] 페이지를 참고하세요.\nEOF\n\ncat \u003e build-test/pages/About.md \u003c\u003c 'EOF'\n---\ntitle: About\ntitleKo: 소개\ntype: Article\n---\n\n# About\n\n이 위키는 [[Home|홈]]에서 시작합니다.\nEOF",
+            "renderedSource": "cat \u003e build-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다 :)\n\n[[About]] 페이지를 참고하세요.\nEOF\n\ncat \u003e build-test/pages/About.md \u003c\u003c 'EOF'\n---\ntitle: About\ntitleKo: 소개\ntype: Article\n---\n\n# About\n\n이 위키는 [[Home|홈]]에서 시작합니다.\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ],
+            "ordinal": 3,
+            "line": 58
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 페이지",
+          "durationMs": 122,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 3,
+                "line": 58
+              },
+              "label": "run:shell @ 기본 페이지"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 3,
+                "line": 58
+              },
+              "label": "run:shell @ 기본 페이지"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "기본 페이지"
+            ],
+            "ordinal": 4,
+            "line": 65
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 페이지",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 4,
+                "line": 65
+              },
+              "label": "run:shell @ 기본 페이지"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "기본 페이지"
+                ],
+                "ordinal": 4,
+                "line": 65
+              },
+              "label": "run:shell @ 기본 페이지"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f build-test/dist/pages/Home/index.html\ntest -f build-test/dist/pages/About/index.html",
+            "renderedSource": "test -f build-test/dist/pages/Home/index.html\ntest -f build-test/dist/pages/About/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "Private 페이지 제외"
+            ],
+            "ordinal": 5,
+            "line": 74
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ Private 페이지 제외",
+          "durationMs": 21,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 5,
+                "line": 74
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 5,
+                "line": 74
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cat \u003e build-test/pages/Secret.md \u003c\u003c 'EOF'\n---\ntitle: Secret\nprivate: true\n---\n\n비밀 내용.\nEOF",
+            "renderedSource": "cat \u003e build-test/pages/Secret.md \u003c\u003c 'EOF'\n---\ntitle: Secret\nprivate: true\n---\n\n비밀 내용.\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "Private 페이지 제외"
+            ],
+            "ordinal": 6,
+            "line": 85
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ Private 페이지 제외",
+          "durationMs": 143,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 6,
+                "line": 85
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 6,
+                "line": 85
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git add . \u0026\u0026 git commit -m \"add secret\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd build-test \u0026\u0026 git add . \u0026\u0026 git commit -m \"add secret\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "페이지 렌더링",
+              "Private 페이지 제외"
+            ],
+            "ordinal": 7,
+            "line": 90
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ Private 페이지 제외",
+          "durationMs": 12,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 7,
+                "line": 90
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "페이지 렌더링",
+                  "Private 페이지 제외"
+                ],
+                "ordinal": 7,
+                "line": 90
+              },
+              "label": "run:shell @ Private 페이지 제외"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test ! -f build-test/dist/pages/Secret/index.html",
+            "renderedSource": "test ! -f build-test/dist/pages/Secret/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "내부 링크"
+            ],
+            "ordinal": 8,
+            "line": 100
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 내부 링크",
+          "durationMs": 14,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "위키링크",
+                  "내부 링크"
+                ],
+                "ordinal": 8,
+                "line": 100
+              },
+              "label": "run:shell @ 내부 링크"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "위키링크",
+                  "내부 링크"
+                ],
+                "ordinal": 8,
+                "line": 100
+              },
+              "label": "run:shell @ 내부 링크"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'class=\"wikilink\"' build-test/dist/pages/Home/index.html",
+            "renderedSource": "grep 'class=\"wikilink\"' build-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "위키링크",
+              "표시 텍스트"
+            ],
+            "ordinal": 9,
+            "line": 110
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 표시 텍스트",
+          "durationMs": 13,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "위키링크",
+                  "표시 텍스트"
+                ],
+                "ordinal": 9,
+                "line": 110
+              },
+              "label": "run:shell @ 표시 텍스트"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "위키링크",
+                  "표시 텍스트"
+                ],
+                "ordinal": 9,
+                "line": 110
+              },
+              "label": "run:shell @ 표시 텍스트"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '홈' build-test/dist/pages/About/index.html",
+            "renderedSource": "grep '홈' build-test/dist/pages/About/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "원본 마크다운"
+            ],
+            "ordinal": 10,
+            "line": 120
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 원본 마크다운",
+          "durationMs": 9,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "원본 마크다운"
+                ],
+                "ordinal": 10,
+                "line": 120
+              },
+              "label": "run:shell @ 원본 마크다운"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "원본 마크다운"
+                ],
+                "ordinal": 10,
+                "line": 120
+              },
+              "label": "run:shell @ 원본 마크다운"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f build-test/dist/pages/Home.txt\ntest -f build-test/dist/pages/About.txt",
+            "renderedSource": "test -f build-test/dist/pages/Home.txt\ntest -f build-test/dist/pages/About.txt"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ],
+            "ordinal": 11,
+            "line": 129
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 검색 인덱스",
+          "durationMs": 14,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "검색 인덱스"
+                ],
+                "ordinal": 11,
+                "line": 129
+              },
+              "label": "run:shell @ 검색 인덱스"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "검색 인덱스"
+                ],
+                "ordinal": 11,
+                "line": 129
+              },
+              "label": "run:shell @ 검색 인덱스"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f build-test/dist/search-index.json",
+            "renderedSource": "test -f build-test/dist/search-index.json"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "검색 인덱스"
+            ],
+            "ordinal": 12,
+            "line": 135
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 검색 인덱스",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "검색 인덱스"
+                ],
+                "ordinal": 12,
+                "line": 135
+              },
+              "label": "run:shell @ 검색 인덱스"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "검색 인덱스"
+                ],
+                "ordinal": 12,
+                "line": 135
+              },
+              "label": "run:shell @ 검색 인덱스"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cat build-test/dist/search-index.json | grep '\"title\"'",
+            "renderedSource": "cat build-test/dist/search-index.json | grep '\"title\"'"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "홈 리다이렉트"
+            ],
+            "ordinal": 13,
+            "line": 146
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 홈 리다이렉트",
+          "durationMs": 20,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "홈 리다이렉트"
+                ],
+                "ordinal": 13,
+                "line": 146
+              },
+              "label": "run:shell @ 홈 리다이렉트"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "홈 리다이렉트"
+                ],
+                "ordinal": 13,
+                "line": 146
+              },
+              "label": "run:shell @ 홈 리다이렉트"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'Home' build-test/dist/index.html",
+            "renderedSource": "grep 'Home' build-test/dist/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/build.spec.md",
+            "headingPath": [
+              "Build",
+              "teardown"
+            ],
+            "ordinal": 14,
+            "line": 154
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ teardown",
+          "durationMs": 29,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "teardown"
+                ],
+                "ordinal": 14,
+                "line": 154
+              },
+              "label": "run:shell @ teardown"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/build.spec.md",
+                "headingPath": [
+                  "Build",
+                  "teardown"
+                ],
+                "ordinal": 14,
+                "line": 154
+              },
+              "label": "run:shell @ teardown"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf build-test",
+            "renderedSource": "rm -rf build-test"
+          }
+        }
+      ]
+    },
+    {
+      "document": {
+        "relativeTo": "specs/content.spec.md",
+        "title": "Content",
+        "markdown": "---\ntype: spec\nworkdir: .tmp-test\ntimeout: 30000\n---\n\n# Content\n\nakwiki의 콘텐츠 모델은 YAML frontmatter가 있는 마크다운 파일로 구성된다.\n\n## setup\n\n```run:shell\nrm -rf content-test \u0026\u0026 mkdir -p content-test/pages content-test/.akwiki\ncat \u003e content-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Content Test\"\n  author: \"tester\"\nEOF\n```\n\n## Frontmatter\n\n### 전체 필드\n\n```run:shell\ncat \u003e content-test/pages/FullPage.md \u003c\u003c 'EOF'\n---\ntitle: Full Page\ntitleKo: 전체 페이지\ntype: Book\naliases:\n  - 풀페이지\ntags:\n  - test\n  - example\n---\n\n# Full Page\n\n본문 내용입니다.\nEOF\n```\n\n### 최소 필드\n\nfrontmatter 없이도 페이지가 생성된다. 파일명이 제목이 된다.\n\n```run:shell\ncat \u003e content-test/pages/MinimalPage.md \u003c\u003c 'EOF'\n# Minimal Page\n\nfrontmatter 없는 페이지.\nEOF\n```\n\n### 빌드 검증\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd content-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n\n두 페이지 모두 빌드된다.\n\n```run:shell\ntest -f content-test/dist/pages/FullPage/index.html\ntest -f content-test/dist/pages/MinimalPage/index.html\n```\n\n## 날짜 추출\n\n`createdAt`과 `modifiedAt`는 git 이력에서 자동 추출된다.\n\n```run:shell\ngrep 'dateCreated' content-test/dist/pages/FullPage/index.html\n```\n\n$ ...dateCreated...\n\n## teardown\n\n```run:shell\nrm -rf content-test\n```\n",
+        "nodes": [
+          {
+            "level": 1,
+            "text": "Content",
+            "raw": "# Content\n",
+            "headingPath": [
+              "Content"
+            ]
+          },
+          {
+            "raw": "\nakwiki의 콘텐츠 모델은 YAML frontmatter가 있는 마크다운 파일로 구성된다.\n\n",
+            "headingPath": [
+              "Content"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "setup",
+            "raw": "## setup\n",
+            "headingPath": [
+              "Content",
+              "setup"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf content-test \u0026\u0026 mkdir -p content-test/pages content-test/.akwiki\ncat \u003e content-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Content Test\"\n  author: \"tester\"\nEOF",
+            "raw": "```run:shell\nrm -rf content-test \u0026\u0026 mkdir -p content-test/pages content-test/.akwiki\ncat \u003e content-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Content Test\"\n  author: \"tester\"\nEOF\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "setup"
+              ],
+              "ordinal": 1,
+              "line": 13
+            }
+          },
+          {
+            "level": 2,
+            "text": "Frontmatter",
+            "raw": "## Frontmatter\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "전체 필드",
+            "raw": "### 전체 필드\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "전체 필드"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cat \u003e content-test/pages/FullPage.md \u003c\u003c 'EOF'\n---\ntitle: Full Page\ntitleKo: 전체 페이지\ntype: Book\naliases:\n  - 풀페이지\ntags:\n  - test\n  - example\n---\n\n# Full Page\n\n본문 내용입니다.\nEOF",
+            "raw": "```run:shell\ncat \u003e content-test/pages/FullPage.md \u003c\u003c 'EOF'\n---\ntitle: Full Page\ntitleKo: 전체 페이지\ntype: Book\naliases:\n  - 풀페이지\ntags:\n  - test\n  - example\n---\n\n# Full Page\n\n본문 내용입니다.\nEOF\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "Frontmatter",
+                "전체 필드"
+              ],
+              "ordinal": 2,
+              "line": 26
+            }
+          },
+          {
+            "level": 3,
+            "text": "최소 필드",
+            "raw": "### 최소 필드\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "최소 필드"
+            ]
+          },
+          {
+            "raw": "\nfrontmatter 없이도 페이지가 생성된다. 파일명이 제목이 된다.\n\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "최소 필드"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "cat \u003e content-test/pages/MinimalPage.md \u003c\u003c 'EOF'\n# Minimal Page\n\nfrontmatter 없는 페이지.\nEOF",
+            "raw": "```run:shell\ncat \u003e content-test/pages/MinimalPage.md \u003c\u003c 'EOF'\n# Minimal Page\n\nfrontmatter 없는 페이지.\nEOF\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "Frontmatter",
+                "최소 필드"
+              ],
+              "ordinal": 3,
+              "line": 49
+            }
+          },
+          {
+            "level": 3,
+            "text": "빌드 검증",
+            "raw": "### 빌드 검증\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "빌드 검증"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd content-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd content-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "Frontmatter",
+                "빌드 검증"
+              ],
+              "ordinal": 4,
+              "line": 59
+            }
+          },
+          {
+            "raw": "\n두 페이지 모두 빌드된다.\n\n",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "빌드 검증"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "test -f content-test/dist/pages/FullPage/index.html\ntest -f content-test/dist/pages/MinimalPage/index.html",
+            "raw": "```run:shell\ntest -f content-test/dist/pages/FullPage/index.html\ntest -f content-test/dist/pages/MinimalPage/index.html\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "Frontmatter",
+                "빌드 검증"
+              ],
+              "ordinal": 5,
+              "line": 66
+            }
+          },
+          {
+            "level": 2,
+            "text": "날짜 추출",
+            "raw": "## 날짜 추출\n",
+            "headingPath": [
+              "Content",
+              "날짜 추출"
+            ]
+          },
+          {
+            "raw": "\n`createdAt`과 `modifiedAt`는 git 이력에서 자동 추출된다.\n\n",
+            "headingPath": [
+              "Content",
+              "날짜 추출"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'dateCreated' content-test/dist/pages/FullPage/index.html",
+            "raw": "```run:shell\ngrep 'dateCreated' content-test/dist/pages/FullPage/index.html\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "날짜 추출"
+              ],
+              "ordinal": 6,
+              "line": 75
+            }
+          },
+          {
+            "raw": "\n$ ...dateCreated...\n\n",
+            "headingPath": [
+              "Content",
+              "날짜 추출"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "teardown",
+            "raw": "## teardown\n",
+            "headingPath": [
+              "Content",
+              "teardown"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf content-test",
+            "raw": "```run:shell\nrm -rf content-test\n```\n",
+            "id": {
+              "file": "specs/content.spec.md",
+              "headingPath": [
+                "Content",
+                "teardown"
+              ],
+              "ordinal": 7,
+              "line": 83
+            }
+          }
+        ],
+        "frontmatter": {
+          "timeout": 30000,
+          "type": "spec",
+          "workdir": ".tmp-test"
+        }
+      },
+      "status": "passed",
+      "cases": [
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "setup"
+            ],
+            "ordinal": 1,
+            "line": 13
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ setup",
+          "durationMs": 29,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 13
+              },
+              "label": "run:shell @ setup"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 13
+              },
+              "label": "run:shell @ setup"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf content-test \u0026\u0026 mkdir -p content-test/pages content-test/.akwiki\ncat \u003e content-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Content Test\"\n  author: \"tester\"\nEOF",
+            "renderedSource": "rm -rf content-test \u0026\u0026 mkdir -p content-test/pages content-test/.akwiki\ncat \u003e content-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Content Test\"\n  author: \"tester\"\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "전체 필드"
+            ],
+            "ordinal": 2,
+            "line": 26
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 전체 필드",
+          "durationMs": 20,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "전체 필드"
+                ],
+                "ordinal": 2,
+                "line": 26
+              },
+              "label": "run:shell @ 전체 필드"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "전체 필드"
+                ],
+                "ordinal": 2,
+                "line": 26
+              },
+              "label": "run:shell @ 전체 필드"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cat \u003e content-test/pages/FullPage.md \u003c\u003c 'EOF'\n---\ntitle: Full Page\ntitleKo: 전체 페이지\ntype: Book\naliases:\n  - 풀페이지\ntags:\n  - test\n  - example\n---\n\n# Full Page\n\n본문 내용입니다.\nEOF",
+            "renderedSource": "cat \u003e content-test/pages/FullPage.md \u003c\u003c 'EOF'\n---\ntitle: Full Page\ntitleKo: 전체 페이지\ntype: Book\naliases:\n  - 풀페이지\ntags:\n  - test\n  - example\n---\n\n# Full Page\n\n본문 내용입니다.\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "최소 필드"
+            ],
+            "ordinal": 3,
+            "line": 49
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 최소 필드",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "최소 필드"
+                ],
+                "ordinal": 3,
+                "line": 49
+              },
+              "label": "run:shell @ 최소 필드"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "최소 필드"
+                ],
+                "ordinal": 3,
+                "line": 49
+              },
+              "label": "run:shell @ 최소 필드"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "cat \u003e content-test/pages/MinimalPage.md \u003c\u003c 'EOF'\n# Minimal Page\n\nfrontmatter 없는 페이지.\nEOF",
+            "renderedSource": "cat \u003e content-test/pages/MinimalPage.md \u003c\u003c 'EOF'\n# Minimal Page\n\nfrontmatter 없는 페이지.\nEOF"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "빌드 검증"
+            ],
+            "ordinal": 4,
+            "line": 59
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 빌드 검증",
+          "durationMs": 119,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "빌드 검증"
+                ],
+                "ordinal": 4,
+                "line": 59
+              },
+              "label": "run:shell @ 빌드 검증"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "빌드 검증"
+                ],
+                "ordinal": 4,
+                "line": 59
+              },
+              "label": "run:shell @ 빌드 검증"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd content-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\ncd content-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "Frontmatter",
+              "빌드 검증"
+            ],
+            "ordinal": 5,
+            "line": 66
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 빌드 검증",
+          "durationMs": 15,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "빌드 검증"
+                ],
+                "ordinal": 5,
+                "line": 66
+              },
+              "label": "run:shell @ 빌드 검증"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "Frontmatter",
+                  "빌드 검증"
+                ],
+                "ordinal": 5,
+                "line": 66
+              },
+              "label": "run:shell @ 빌드 검증"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "test -f content-test/dist/pages/FullPage/index.html\ntest -f content-test/dist/pages/MinimalPage/index.html",
+            "renderedSource": "test -f content-test/dist/pages/FullPage/index.html\ntest -f content-test/dist/pages/MinimalPage/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "날짜 추출"
+            ],
+            "ordinal": 6,
+            "line": 75
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 날짜 추출",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "날짜 추출"
+                ],
+                "ordinal": 6,
+                "line": 75
+              },
+              "label": "run:shell @ 날짜 추출"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "날짜 추출"
+                ],
+                "ordinal": 6,
+                "line": 75
+              },
+              "label": "run:shell @ 날짜 추출"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'dateCreated' content-test/dist/pages/FullPage/index.html",
+            "renderedSource": "grep 'dateCreated' content-test/dist/pages/FullPage/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/content.spec.md",
+            "headingPath": [
+              "Content",
+              "teardown"
+            ],
+            "ordinal": 7,
+            "line": 83
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ teardown",
+          "durationMs": 25,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "teardown"
+                ],
+                "ordinal": 7,
+                "line": 83
+              },
+              "label": "run:shell @ teardown"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/content.spec.md",
+                "headingPath": [
+                  "Content",
+                  "teardown"
+                ],
+                "ordinal": 7,
+                "line": 83
+              },
+              "label": "run:shell @ teardown"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf content-test",
+            "renderedSource": "rm -rf content-test"
+          }
+        }
+      ]
+    },
+    {
+      "document": {
+        "relativeTo": "specs/theme.spec.md",
+        "title": "Theme",
+        "markdown": "---\ntype: spec\nworkdir: .tmp-test\ntimeout: 30000\n---\n\n# Theme\n\nakwiki 기본 테마는 wiki.g15e.com의 디자인을 재현한다.\n\n## setup\n\n```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf theme-test \u0026\u0026 mkdir -p theme-test/pages theme-test/.akwiki\ncat \u003e theme-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Theme Test\"\n  author: \"tester\"\ntheme:\n  layout:\n    toc: true\n    search: true\n  footer:\n    copyright: \"2026 © tester\"\nEOF\ncat \u003e theme-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다\n\n## 첫 번째 섹션\n\n내용.\n\n## 두 번째 섹션\n\n내용.\nEOF\ncd theme-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n\n## 레이아웃\n\n### 기본 구조\n\n페이지에는 skip link, 네비게이션, 헤더, TOC, 콘텐츠, 푸터가 포함된다.\n\n```run:shell\ngrep '본문으로 건너뛰기' theme-test/dist/pages/Home/index.html\n```\n\n$ ...본문으로 건너뛰기...\n\n```run:shell\ngrep '위키 홈' theme-test/dist/pages/Home/index.html | head -1\n```\n\n$ ...위키 홈...\n\n### 목차 (TOC)\n\nh2 이상의 헤딩에서 자동 생성되는 목차가 포함된다.\n\n```run:shell\ngrep '목차' theme-test/dist/pages/Home/index.html\n```\n\n$ ...목차...\n\n```run:shell\ngrep '맨 위로' theme-test/dist/pages/Home/index.html\n```\n\n$ ...맨 위로...\n\n### 푸터\n\n설정의 copyright이 푸터에 표시된다.\n\n```run:shell\ngrep '2026 © tester' theme-test/dist/pages/Home/index.html\n```\n\n$ ...2026 © tester...\n\n크레딧이 항상 포함된다.\n\n```run:shell\ngrep 'akngs' theme-test/dist/pages/Home/index.html\n```\n\n$ ...akngs...\n\n## CSS\n\n### OKLCh 색상 시스템\n\n기본 CSS에는 OKLCh 기반 색상 변수가 정의되어 있다.\n\n```run:shell\ngrep 'oklch' theme-test/dist/assets/style.css | head -1\n```\n\n$ ...oklch...\n\n### 다크 모드\n\n`prefers-color-scheme: dark` 미디어 쿼리로 다크 모드를 지원한다.\n\n```run:shell\ngrep 'prefers-color-scheme' theme-test/dist/assets/style.css\n```\n\n$ ...prefers-color-scheme...\n\n### 3컬럼 Grid 레이아웃\n\n데스크톱에서는 `2fr 5fr 2fr` 3컬럼 레이아웃을 사용한다.\n\n```run:shell\ngrep '2fr 5fr 2fr' theme-test/dist/assets/style.css\n```\n\n$ ...2fr 5fr 2fr...\n\n### 한국어 줄바꿈\n\n`word-break: keep-all`로 한국어 줄바꿈을 최적화한다.\n\n```run:shell\ngrep 'keep-all' theme-test/dist/assets/style.css\n```\n\n$ ...keep-all...\n\n### 구분선 (HR)\n\nHR은 CSS content 속성으로 section mark 텍스트를 표시한다.\n\n```run:shell\ngrep 'hr::after' theme-test/dist/assets/style.css\n```\n\n$ ...hr::after...\n\n## 검색\n\n### 검색 JS\n\n클라이언트 사이드 검색이 포함된다.\n\n```run:shell\ngrep 'search-index.json' theme-test/dist/assets/search.js\n```\n\n$ ...search-index.json...\n\n### 키보드 단축키\n\nCtrl+K/Cmd+K로 검색을 토글한다.\n\n```run:shell\ngrep 'ctrlKey' theme-test/dist/assets/search.js\n```\n\n$ ...ctrlKey...\n\n## Schema.org JSON-LD\n\n각 페이지에 Schema.org 메타데이터가 포함된다.\n\n```run:shell\ngrep 'schema.org' theme-test/dist/pages/Home/index.html\n```\n\n$ ...schema.org...\n\n## Noto Serif KR 폰트\n\nGoogle Fonts에서 Noto Serif KR을 로드한다.\n\n```run:shell\ngrep 'Noto.Serif.KR' theme-test/dist/pages/Home/index.html\n```\n\n$ ...Noto...Serif...KR...\n\n## teardown\n\n```run:shell\nrm -rf theme-test\n```\n",
+        "nodes": [
+          {
+            "level": 1,
+            "text": "Theme",
+            "raw": "# Theme\n",
+            "headingPath": [
+              "Theme"
+            ]
+          },
+          {
+            "raw": "\nakwiki 기본 테마는 wiki.g15e.com의 디자인을 재현한다.\n\n",
+            "headingPath": [
+              "Theme"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "setup",
+            "raw": "## setup\n",
+            "headingPath": [
+              "Theme",
+              "setup"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf theme-test \u0026\u0026 mkdir -p theme-test/pages theme-test/.akwiki\ncat \u003e theme-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Theme Test\"\n  author: \"tester\"\ntheme:\n  layout:\n    toc: true\n    search: true\n  footer:\n    copyright: \"2026 © tester\"\nEOF\ncat \u003e theme-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다\n\n## 첫 번째 섹션\n\n내용.\n\n## 두 번째 섹션\n\n내용.\nEOF\ncd theme-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "raw": "```run:shell\nAKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf theme-test \u0026\u0026 mkdir -p theme-test/pages theme-test/.akwiki\ncat \u003e theme-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Theme Test\"\n  author: \"tester\"\ntheme:\n  layout:\n    toc: true\n    search: true\n  footer:\n    copyright: \"2026 © tester\"\nEOF\ncat \u003e theme-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다\n\n## 첫 번째 섹션\n\n내용.\n\n## 두 번째 섹션\n\n내용.\nEOF\ncd theme-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "setup"
+              ],
+              "ordinal": 1,
+              "line": 13
+            }
+          },
+          {
+            "level": 2,
+            "text": "레이아웃",
+            "raw": "## 레이아웃\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "기본 구조",
+            "raw": "### 기본 구조\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ]
+          },
+          {
+            "raw": "\n페이지에는 skip link, 네비게이션, 헤더, TOC, 콘텐츠, 푸터가 포함된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '본문으로 건너뛰기' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep '본문으로 건너뛰기' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "기본 구조"
+              ],
+              "ordinal": 2,
+              "line": 54
+            }
+          },
+          {
+            "raw": "\n$ ...본문으로 건너뛰기...\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '위키 홈' theme-test/dist/pages/Home/index.html | head -1",
+            "raw": "```run:shell\ngrep '위키 홈' theme-test/dist/pages/Home/index.html | head -1\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "기본 구조"
+              ],
+              "ordinal": 3,
+              "line": 60
+            }
+          },
+          {
+            "raw": "\n$ ...위키 홈...\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "목차 (TOC)",
+            "raw": "### 목차 (TOC)\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ]
+          },
+          {
+            "raw": "\nh2 이상의 헤딩에서 자동 생성되는 목차가 포함된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '목차' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep '목차' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "목차 (TOC)"
+              ],
+              "ordinal": 4,
+              "line": 70
+            }
+          },
+          {
+            "raw": "\n$ ...목차...\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '맨 위로' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep '맨 위로' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "목차 (TOC)"
+              ],
+              "ordinal": 5,
+              "line": 76
+            }
+          },
+          {
+            "raw": "\n$ ...맨 위로...\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "푸터",
+            "raw": "### 푸터\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ]
+          },
+          {
+            "raw": "\n설정의 copyright이 푸터에 표시된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '2026 © tester' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep '2026 © tester' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "푸터"
+              ],
+              "ordinal": 6,
+              "line": 86
+            }
+          },
+          {
+            "raw": "\n$ ...2026 © tester...\n\n크레딧이 항상 포함된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'akngs' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep 'akngs' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "레이아웃",
+                "푸터"
+              ],
+              "ordinal": 7,
+              "line": 94
+            }
+          },
+          {
+            "raw": "\n$ ...akngs...\n\n",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "CSS",
+            "raw": "## CSS\n",
+            "headingPath": [
+              "Theme",
+              "CSS"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "OKLCh 색상 시스템",
+            "raw": "### OKLCh 색상 시스템\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "OKLCh 색상 시스템"
+            ]
+          },
+          {
+            "raw": "\n기본 CSS에는 OKLCh 기반 색상 변수가 정의되어 있다.\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "OKLCh 색상 시스템"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'oklch' theme-test/dist/assets/style.css | head -1",
+            "raw": "```run:shell\ngrep 'oklch' theme-test/dist/assets/style.css | head -1\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "CSS",
+                "OKLCh 색상 시스템"
+              ],
+              "ordinal": 8,
+              "line": 106
+            }
+          },
+          {
+            "raw": "\n$ ...oklch...\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "OKLCh 색상 시스템"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "다크 모드",
+            "raw": "### 다크 모드\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "다크 모드"
+            ]
+          },
+          {
+            "raw": "\n`prefers-color-scheme: dark` 미디어 쿼리로 다크 모드를 지원한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "다크 모드"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'prefers-color-scheme' theme-test/dist/assets/style.css",
+            "raw": "```run:shell\ngrep 'prefers-color-scheme' theme-test/dist/assets/style.css\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "CSS",
+                "다크 모드"
+              ],
+              "ordinal": 9,
+              "line": 116
+            }
+          },
+          {
+            "raw": "\n$ ...prefers-color-scheme...\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "다크 모드"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "3컬럼 Grid 레이아웃",
+            "raw": "### 3컬럼 Grid 레이아웃\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "3컬럼 Grid 레이아웃"
+            ]
+          },
+          {
+            "raw": "\n데스크톱에서는 `2fr 5fr 2fr` 3컬럼 레이아웃을 사용한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "3컬럼 Grid 레이아웃"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep '2fr 5fr 2fr' theme-test/dist/assets/style.css",
+            "raw": "```run:shell\ngrep '2fr 5fr 2fr' theme-test/dist/assets/style.css\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "CSS",
+                "3컬럼 Grid 레이아웃"
+              ],
+              "ordinal": 10,
+              "line": 126
+            }
+          },
+          {
+            "raw": "\n$ ...2fr 5fr 2fr...\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "3컬럼 Grid 레이아웃"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "한국어 줄바꿈",
+            "raw": "### 한국어 줄바꿈\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "한국어 줄바꿈"
+            ]
+          },
+          {
+            "raw": "\n`word-break: keep-all`로 한국어 줄바꿈을 최적화한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "한국어 줄바꿈"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'keep-all' theme-test/dist/assets/style.css",
+            "raw": "```run:shell\ngrep 'keep-all' theme-test/dist/assets/style.css\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "CSS",
+                "한국어 줄바꿈"
+              ],
+              "ordinal": 11,
+              "line": 136
+            }
+          },
+          {
+            "raw": "\n$ ...keep-all...\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "한국어 줄바꿈"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "구분선 (HR)",
+            "raw": "### 구분선 (HR)\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "구분선 (HR)"
+            ]
+          },
+          {
+            "raw": "\nHR은 CSS content 속성으로 section mark 텍스트를 표시한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "구분선 (HR)"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'hr::after' theme-test/dist/assets/style.css",
+            "raw": "```run:shell\ngrep 'hr::after' theme-test/dist/assets/style.css\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "CSS",
+                "구분선 (HR)"
+              ],
+              "ordinal": 12,
+              "line": 146
+            }
+          },
+          {
+            "raw": "\n$ ...hr::after...\n\n",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "구분선 (HR)"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "검색",
+            "raw": "## 검색\n",
+            "headingPath": [
+              "Theme",
+              "검색"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "검색 JS",
+            "raw": "### 검색 JS\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "검색 JS"
+            ]
+          },
+          {
+            "raw": "\n클라이언트 사이드 검색이 포함된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "검색 JS"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'search-index.json' theme-test/dist/assets/search.js",
+            "raw": "```run:shell\ngrep 'search-index.json' theme-test/dist/assets/search.js\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "검색",
+                "검색 JS"
+              ],
+              "ordinal": 13,
+              "line": 158
+            }
+          },
+          {
+            "raw": "\n$ ...search-index.json...\n\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "검색 JS"
+            ]
+          },
+          {
+            "level": 3,
+            "text": "키보드 단축키",
+            "raw": "### 키보드 단축키\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "키보드 단축키"
+            ]
+          },
+          {
+            "raw": "\nCtrl+K/Cmd+K로 검색을 토글한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "키보드 단축키"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'ctrlKey' theme-test/dist/assets/search.js",
+            "raw": "```run:shell\ngrep 'ctrlKey' theme-test/dist/assets/search.js\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "검색",
+                "키보드 단축키"
+              ],
+              "ordinal": 14,
+              "line": 168
+            }
+          },
+          {
+            "raw": "\n$ ...ctrlKey...\n\n",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "키보드 단축키"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "Schema.org JSON-LD",
+            "raw": "## Schema.org JSON-LD\n",
+            "headingPath": [
+              "Theme",
+              "Schema.org JSON-LD"
+            ]
+          },
+          {
+            "raw": "\n각 페이지에 Schema.org 메타데이터가 포함된다.\n\n",
+            "headingPath": [
+              "Theme",
+              "Schema.org JSON-LD"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'schema.org' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep 'schema.org' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "Schema.org JSON-LD"
+              ],
+              "ordinal": 15,
+              "line": 178
+            }
+          },
+          {
+            "raw": "\n$ ...schema.org...\n\n",
+            "headingPath": [
+              "Theme",
+              "Schema.org JSON-LD"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "Noto Serif KR 폰트",
+            "raw": "## Noto Serif KR 폰트\n",
+            "headingPath": [
+              "Theme",
+              "Noto Serif KR 폰트"
+            ]
+          },
+          {
+            "raw": "\nGoogle Fonts에서 Noto Serif KR을 로드한다.\n\n",
+            "headingPath": [
+              "Theme",
+              "Noto Serif KR 폰트"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "grep 'Noto.Serif.KR' theme-test/dist/pages/Home/index.html",
+            "raw": "```run:shell\ngrep 'Noto.Serif.KR' theme-test/dist/pages/Home/index.html\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "Noto Serif KR 폰트"
+              ],
+              "ordinal": 16,
+              "line": 188
+            }
+          },
+          {
+            "raw": "\n$ ...Noto...Serif...KR...\n\n",
+            "headingPath": [
+              "Theme",
+              "Noto Serif KR 폰트"
+            ]
+          },
+          {
+            "level": 2,
+            "text": "teardown",
+            "raw": "## teardown\n",
+            "headingPath": [
+              "Theme",
+              "teardown"
+            ]
+          },
+          {
+            "block": {
+              "raw": "run:shell",
+              "kind": "run",
+              "target": "shell"
+            },
+            "source": "rm -rf theme-test",
+            "raw": "```run:shell\nrm -rf theme-test\n```\n",
+            "id": {
+              "file": "specs/theme.spec.md",
+              "headingPath": [
+                "Theme",
+                "teardown"
+              ],
+              "ordinal": 17,
+              "line": 196
+            }
+          }
+        ],
+        "frontmatter": {
+          "timeout": 30000,
+          "type": "spec",
+          "workdir": ".tmp-test"
+        }
+      },
+      "status": "passed",
+      "cases": [
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "setup"
+            ],
+            "ordinal": 1,
+            "line": 13
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ setup",
+          "durationMs": 127,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 13
+              },
+              "label": "run:shell @ setup"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "setup"
+                ],
+                "ordinal": 1,
+                "line": 13
+              },
+              "label": "run:shell @ setup"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf theme-test \u0026\u0026 mkdir -p theme-test/pages theme-test/.akwiki\ncat \u003e theme-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Theme Test\"\n  author: \"tester\"\ntheme:\n  layout:\n    toc: true\n    search: true\n  footer:\n    copyright: \"2026 © tester\"\nEOF\ncat \u003e theme-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다\n\n## 첫 번째 섹션\n\n내용.\n\n## 두 번째 섹션\n\n내용.\nEOF\ncd theme-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261",
+            "renderedSource": "AKWIKI=\"$(cd .. \u0026\u0026 pwd)/build/akwiki\"\nrm -rf theme-test \u0026\u0026 mkdir -p theme-test/pages theme-test/.akwiki\ncat \u003e theme-test/.akwiki/config.yml \u003c\u003c 'EOF'\nsite:\n  title: \"Theme Test\"\n  author: \"tester\"\ntheme:\n  layout:\n    toc: true\n    search: true\n  footer:\n    copyright: \"2026 © tester\"\nEOF\ncat \u003e theme-test/pages/Home.md \u003c\u003c 'EOF'\n---\ntitle: Home\ntitleKo: 위키 홈\n---\n\n# Home\n\n\u003e 환영합니다\n\n## 첫 번째 섹션\n\n내용.\n\n## 두 번째 섹션\n\n내용.\nEOF\ncd theme-test \u0026\u0026 git init -q \u0026\u0026 git add . \u0026\u0026 git commit -m \"init\" -q \u0026\u0026 $AKWIKI build 2\u003e\u00261"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ],
+            "ordinal": 2,
+            "line": 54
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 구조",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "기본 구조"
+                ],
+                "ordinal": 2,
+                "line": 54
+              },
+              "label": "run:shell @ 기본 구조"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "기본 구조"
+                ],
+                "ordinal": 2,
+                "line": 54
+              },
+              "label": "run:shell @ 기본 구조"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '본문으로 건너뛰기' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep '본문으로 건너뛰기' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "기본 구조"
+            ],
+            "ordinal": 3,
+            "line": 60
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 기본 구조",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "기본 구조"
+                ],
+                "ordinal": 3,
+                "line": 60
+              },
+              "label": "run:shell @ 기본 구조"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "기본 구조"
+                ],
+                "ordinal": 3,
+                "line": 60
+              },
+              "label": "run:shell @ 기본 구조"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '위키 홈' theme-test/dist/pages/Home/index.html | head -1",
+            "renderedSource": "grep '위키 홈' theme-test/dist/pages/Home/index.html | head -1"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ],
+            "ordinal": 4,
+            "line": 70
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 목차 (TOC)",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "목차 (TOC)"
+                ],
+                "ordinal": 4,
+                "line": 70
+              },
+              "label": "run:shell @ 목차 (TOC)"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "목차 (TOC)"
+                ],
+                "ordinal": 4,
+                "line": 70
+              },
+              "label": "run:shell @ 목차 (TOC)"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '목차' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep '목차' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "목차 (TOC)"
+            ],
+            "ordinal": 5,
+            "line": 76
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 목차 (TOC)",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "목차 (TOC)"
+                ],
+                "ordinal": 5,
+                "line": 76
+              },
+              "label": "run:shell @ 목차 (TOC)"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "목차 (TOC)"
+                ],
+                "ordinal": 5,
+                "line": 76
+              },
+              "label": "run:shell @ 목차 (TOC)"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '맨 위로' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep '맨 위로' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ],
+            "ordinal": 6,
+            "line": 86
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 푸터",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "푸터"
+                ],
+                "ordinal": 6,
+                "line": 86
+              },
+              "label": "run:shell @ 푸터"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "푸터"
+                ],
+                "ordinal": 6,
+                "line": 86
+              },
+              "label": "run:shell @ 푸터"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '2026 © tester' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep '2026 © tester' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "레이아웃",
+              "푸터"
+            ],
+            "ordinal": 7,
+            "line": 94
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 푸터",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "푸터"
+                ],
+                "ordinal": 7,
+                "line": 94
+              },
+              "label": "run:shell @ 푸터"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "레이아웃",
+                  "푸터"
+                ],
+                "ordinal": 7,
+                "line": 94
+              },
+              "label": "run:shell @ 푸터"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'akngs' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep 'akngs' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "OKLCh 색상 시스템"
+            ],
+            "ordinal": 8,
+            "line": 106
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ OKLCh 색상 시스템",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "OKLCh 색상 시스템"
+                ],
+                "ordinal": 8,
+                "line": 106
+              },
+              "label": "run:shell @ OKLCh 색상 시스템"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "OKLCh 색상 시스템"
+                ],
+                "ordinal": 8,
+                "line": 106
+              },
+              "label": "run:shell @ OKLCh 색상 시스템"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'oklch' theme-test/dist/assets/style.css | head -1",
+            "renderedSource": "grep 'oklch' theme-test/dist/assets/style.css | head -1"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "다크 모드"
+            ],
+            "ordinal": 9,
+            "line": 116
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 다크 모드",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "다크 모드"
+                ],
+                "ordinal": 9,
+                "line": 116
+              },
+              "label": "run:shell @ 다크 모드"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "다크 모드"
+                ],
+                "ordinal": 9,
+                "line": 116
+              },
+              "label": "run:shell @ 다크 모드"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'prefers-color-scheme' theme-test/dist/assets/style.css",
+            "renderedSource": "grep 'prefers-color-scheme' theme-test/dist/assets/style.css"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "3컬럼 Grid 레이아웃"
+            ],
+            "ordinal": 10,
+            "line": 126
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 3컬럼 Grid 레이아웃",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "3컬럼 Grid 레이아웃"
+                ],
+                "ordinal": 10,
+                "line": 126
+              },
+              "label": "run:shell @ 3컬럼 Grid 레이아웃"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "3컬럼 Grid 레이아웃"
+                ],
+                "ordinal": 10,
+                "line": 126
+              },
+              "label": "run:shell @ 3컬럼 Grid 레이아웃"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep '2fr 5fr 2fr' theme-test/dist/assets/style.css",
+            "renderedSource": "grep '2fr 5fr 2fr' theme-test/dist/assets/style.css"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "한국어 줄바꿈"
+            ],
+            "ordinal": 11,
+            "line": 136
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 한국어 줄바꿈",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "한국어 줄바꿈"
+                ],
+                "ordinal": 11,
+                "line": 136
+              },
+              "label": "run:shell @ 한국어 줄바꿈"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "한국어 줄바꿈"
+                ],
+                "ordinal": 11,
+                "line": 136
+              },
+              "label": "run:shell @ 한국어 줄바꿈"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'keep-all' theme-test/dist/assets/style.css",
+            "renderedSource": "grep 'keep-all' theme-test/dist/assets/style.css"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "CSS",
+              "구분선 (HR)"
+            ],
+            "ordinal": 12,
+            "line": 146
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 구분선 (HR)",
+          "durationMs": 18,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "구분선 (HR)"
+                ],
+                "ordinal": 12,
+                "line": 146
+              },
+              "label": "run:shell @ 구분선 (HR)"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "CSS",
+                  "구분선 (HR)"
+                ],
+                "ordinal": 12,
+                "line": 146
+              },
+              "label": "run:shell @ 구분선 (HR)"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'hr::after' theme-test/dist/assets/style.css",
+            "renderedSource": "grep 'hr::after' theme-test/dist/assets/style.css"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "검색 JS"
+            ],
+            "ordinal": 13,
+            "line": 158
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 검색 JS",
+          "durationMs": 17,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "검색",
+                  "검색 JS"
+                ],
+                "ordinal": 13,
+                "line": 158
+              },
+              "label": "run:shell @ 검색 JS"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "검색",
+                  "검색 JS"
+                ],
+                "ordinal": 13,
+                "line": 158
+              },
+              "label": "run:shell @ 검색 JS"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'search-index.json' theme-test/dist/assets/search.js",
+            "renderedSource": "grep 'search-index.json' theme-test/dist/assets/search.js"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "검색",
+              "키보드 단축키"
+            ],
+            "ordinal": 14,
+            "line": 168
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ 키보드 단축키",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "검색",
+                  "키보드 단축키"
+                ],
+                "ordinal": 14,
+                "line": 168
+              },
+              "label": "run:shell @ 키보드 단축키"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "검색",
+                  "키보드 단축키"
+                ],
+                "ordinal": 14,
+                "line": 168
+              },
+              "label": "run:shell @ 키보드 단축키"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'ctrlKey' theme-test/dist/assets/search.js",
+            "renderedSource": "grep 'ctrlKey' theme-test/dist/assets/search.js"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "Schema.org JSON-LD"
+            ],
+            "ordinal": 15,
+            "line": 178
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ Schema.org JSON-LD",
+          "durationMs": 16,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "Schema.org JSON-LD"
+                ],
+                "ordinal": 15,
+                "line": 178
+              },
+              "label": "run:shell @ Schema.org JSON-LD"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "Schema.org JSON-LD"
+                ],
+                "ordinal": 15,
+                "line": 178
+              },
+              "label": "run:shell @ Schema.org JSON-LD"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'schema.org' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep 'schema.org' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "Noto Serif KR 폰트"
+            ],
+            "ordinal": 16,
+            "line": 188
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ Noto Serif KR 폰트",
+          "durationMs": 12,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "Noto Serif KR 폰트"
+                ],
+                "ordinal": 16,
+                "line": 188
+              },
+              "label": "run:shell @ Noto Serif KR 폰트"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "Noto Serif KR 폰트"
+                ],
+                "ordinal": 16,
+                "line": 188
+              },
+              "label": "run:shell @ Noto Serif KR 폰트"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "grep 'Noto.Serif.KR' theme-test/dist/pages/Home/index.html",
+            "renderedSource": "grep 'Noto.Serif.KR' theme-test/dist/pages/Home/index.html"
+          }
+        },
+        {
+          "id": {
+            "file": "specs/theme.spec.md",
+            "headingPath": [
+              "Theme",
+              "teardown"
+            ],
+            "ordinal": 17,
+            "line": 196
+          },
+          "kind": "code",
+          "status": "passed",
+          "label": "run:shell @ teardown",
+          "durationMs": 19,
+          "events": [
+            {
+              "type": "caseStarted",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "teardown"
+                ],
+                "ordinal": 17,
+                "line": 196
+              },
+              "label": "run:shell @ teardown"
+            },
+            {
+              "type": "casePassed",
+              "id": {
+                "file": "specs/theme.spec.md",
+                "headingPath": [
+                  "Theme",
+                  "teardown"
+                ],
+                "ordinal": 17,
+                "line": 196
+              },
+              "label": "run:shell @ teardown"
+            }
+          ],
+          "code": {
+            "block": "run:shell",
+            "template": "rm -rf theme-test",
+            "renderedSource": "rm -rf theme-test"
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "specsTotal": 5,
+    "specsPassed": 5,
+    "specsFailed": 0,
+    "casesTotal": 50,
+    "casesPassed": 50,
+    "casesFailed": 0,
+    "casesExpectedFail": 0
+  }
+}
