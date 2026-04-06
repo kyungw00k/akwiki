@@ -1,0 +1,12 @@
+site:
+  title: "akwiki demo"
+  author: "kyungw00k"
+  url: "https://kyungw00k.github.io/akwiki"
+  language: "ko"
+
+theme:
+  footer:
+    copyright: "2026 © kyungw00k"
+    links:
+      - label: "GitHub"
+        url: "https://github.com/kyungw00k/akwiki"

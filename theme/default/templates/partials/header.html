@@ -1,7 +1,17 @@
 {{ define "header" }}
-<nav data-area="nav">
-  <a href="{{ .Site.Site.URL }}/pages/Home">위키 홈</a>
-  {{ if .Site.Theme.Edit.URL }}<a href="{{ editURL .Site.Theme.Edit.URL .Page.Name }}">Edit</a>{{ end }}
+<nav data-area="nav" aria-label="위키 탐색">
+  <ul>
+    <li><a href="{{ .Site.Site.URL }}/pages/Home">위키 홈</a></li>
+    {{ if .Site.Theme.Edit.URL }}<li><a href="{{ editURL .Site.Theme.Edit.URL .Page.Name }}" tabindex="-1" aria-hidden="true">Edit</a></li>{{ end }}
+    {{ if .Site.Theme.Layout.Search }}
+    <li>
+      <form role="search" aria-label="위키 검색">
+        <input type="text" id="search-input" placeholder="검색" aria-label="위키 검색" aria-autocomplete="list" aria-controls="search-results" autocomplete="off">
+        <ul id="search-results" class="autocomplete-result" role="listbox" aria-label="검색 결과"></ul>
+      </form>
+    </li>
+    {{ end }}
+  </ul>
 </nav>
 <header data-area="header">
   <h1>{{ if .Page.TitleKo }}{{ .Page.TitleKo }}{{ else }}{{ .Page.Title }}{{ end }}</h1>

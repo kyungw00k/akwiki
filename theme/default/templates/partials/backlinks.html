@@ -1,10 +1,1 @@
-{{ define "backlinks" }}
-{{ if and .Site.Theme.Layout.Backlinks .Backlinks }}
-<aside data-area="backlinks">
-  <h2>역링크</h2>
-  <ul>
-    {{ range .Backlinks }}<li><a href="{{ $.Site.Site.URL }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
-  </ul>
-</aside>
-{{ end }}
-{{ end }}
+{{ define "backlinks" }}{{ end }}

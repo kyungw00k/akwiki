@@ -48,7 +48,7 @@ func TestRenderPage(t *testing.T) {
 		"<p>Hello</p>",
 		`lang="ko"`,
 		"Test Wiki",
-		"search-container",
+		`role="search"`,
 	}
 	for _, want := range checks {
 		if !strings.Contains(html, want) {
@@ -87,8 +87,8 @@ func TestRenderPage_NoTOC(t *testing.T) {
 	if strings.Contains(html, `aria-label="목차"`) {
 		t.Error("TOC should not be rendered when disabled")
 	}
-	// Search disabled, should not contain search container
-	if strings.Contains(html, "search-container") {
+	// Search disabled, should not contain search form
+	if strings.Contains(html, `role="search"`) {
 		t.Error("search should not be rendered when disabled")
 	}
 }

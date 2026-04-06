@@ -1,6 +1,7 @@
 {{ define "related" }}
-{{ if and .Site.Theme.Layout.Related .Related }}
-<aside data-area="related">
+{{ if or (and .Site.Theme.Layout.Related .Related) (and .Site.Theme.Layout.Backlinks .Backlinks) }}
+<aside data-area="related" aria-label="관련 글">
+  {{ if and .Site.Theme.Layout.Related .Related }}
   {{ range $type, $pages := .Related }}
   {{ if $pages }}
   <section>
@@ -10,6 +11,15 @@
     </ul>
   </section>
   {{ end }}
+  {{ end }}
+  {{ end }}
+  {{ if and .Site.Theme.Layout.Backlinks .Backlinks }}
+  <section>
+    <h2>역링크</h2>
+    <ul>
+      {{ range .Backlinks }}<li><a href="{{ $.Site.Site.URL }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
+    </ul>
+  </section>
   {{ end }}
 </aside>
 {{ end }}
