@@ -110,12 +110,29 @@ func Build(rootDir, outDir string) error {
 		return fmt.Errorf("create template engine: %w", err)
 	}
 
-	// 13. Render each non-private page
+	// 13. Build link resolver for wikilinks
+	linkResolver := func(target string) wiki.LinkStatus {
+		// Check alias map first
+		resolvedTarget := target
+		if aliasTarget, ok := aliasMap[target]; ok {
+			resolvedTarget = aliasTarget
+		}
+
+		if privateNames[resolvedTarget] {
+			return wiki.LinkPrivate
+		}
+		if _, ok := pageByName[resolvedTarget]; ok {
+			return wiki.LinkExists
+		}
+		return wiki.LinkMissing
+	}
+
+	// 14. Render each non-private page
 	for i := range pages {
 		p := &pages[i]
 
-		// a. Render markdown to HTML
-		htmlBytes, err := render.RenderMarkdown(p.RawBody, cfg.Build.PageRoute)
+		// a. Render markdown to HTML with link resolution
+		htmlBytes, err := render.RenderMarkdownWithResolver(p.RawBody, cfg.Build.PageRoute, linkResolver)
 		if err != nil {
 			return fmt.Errorf("render markdown for %s: %w", p.Name, err)
 		}

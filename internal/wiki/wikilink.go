@@ -115,3 +115,76 @@ func (e *wikilinkExtension) Extend(m goldmark.Markdown) {
 		),
 	)
 }
+
+// LinkStatus represents the resolution status of a wikilink target.
+type LinkStatus int
+
+const (
+	LinkExists  LinkStatus = iota
+	LinkPrivate
+	LinkMissing
+)
+
+// LinkResolver determines the status of a wikilink target.
+type LinkResolver func(target string) LinkStatus
+
+// wikilinkResolveRenderer renders Wikilink nodes with link resolution.
+type wikilinkResolveRenderer struct {
+	pageRoute string
+	resolver  LinkResolver
+}
+
+func (r *wikilinkResolveRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(KindWikilink, r.renderWikilink)
+}
+
+func (r *wikilinkResolveRenderer) renderWikilink(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+	if !entering {
+		return ast.WalkContinue, nil
+	}
+	n := node.(*Wikilink)
+
+	status := LinkExists
+	if r.resolver != nil {
+		status = r.resolver(n.Target)
+	}
+
+	switch status {
+	case LinkPrivate:
+		fmt.Fprintf(w, `<a href="#private-link" data-link="private" class="wikilink">%s</a>`, n.Display)
+	case LinkMissing:
+		fmt.Fprintf(w, `<a class="wikilink-missing">%s</a>`, n.Display)
+	default:
+		href := r.pageRoute + "/" + url.PathEscape(n.Target)
+		fmt.Fprintf(w, `<a href="%s" class="wikilink">%s</a>`, href, n.Display)
+	}
+	return ast.WalkContinue, nil
+}
+
+// wikilinkResolveExtension is a goldmark extension with link resolution.
+type wikilinkResolveExtension struct {
+	pageRoute string
+	resolver  LinkResolver
+}
+
+// NewWikilinkExtensionWithResolver creates a wikilink extension that uses a resolver
+// to determine the status of each link target.
+func NewWikilinkExtensionWithResolver(pageRoute string, resolver LinkResolver) goldmark.Extender {
+	return &wikilinkResolveExtension{pageRoute: pageRoute, resolver: resolver}
+}
+
+func (e *wikilinkResolveExtension) Extend(m goldmark.Markdown) {
+	m.Parser().AddOptions(
+		parser.WithInlineParsers(
+			util.Prioritized(defaultWikilinkParser, 150),
+		),
+	)
+	m.Renderer().AddOptions(
+		renderer.WithNodeRenderers(
+			util.Prioritized(&wikilinkResolveRenderer{
+				pageRoute: e.pageRoute,
+				resolver:  e.resolver,
+			}, 200),
+		),
+	)
+}

@@ -33,3 +33,26 @@ func RenderMarkdown(source []byte, pageRoute string) ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
+
+// RenderMarkdownWithResolver converts markdown source to HTML using goldmark with
+// GFM, wikilink support (with link resolution), automatic heading IDs, and unsafe HTML enabled.
+func RenderMarkdownWithResolver(source []byte, pageRoute string, resolver wiki.LinkResolver) ([]byte, error) {
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			extension.GFM,
+			wiki.NewWikilinkExtensionWithResolver(pageRoute, resolver),
+		),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
+		),
+	)
+
+	var buf bytes.Buffer
+	if err := md.Convert(source, &buf); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
