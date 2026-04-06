@@ -1,0 +1,13 @@
+{{ define "footer" }}
+<footer data-area="footer">
+  <p>
+    {{ if .Site.Theme.Footer.Copyright }}{{ .Site.Theme.Footer.Copyright }}{{ end }}
+    {{ range .Site.Theme.Footer.Links }} | <a href="{{ .URL }}">{{ .Label }}</a>{{ end }}
+    | <a href="{{ .Page.RawURL }}" title="Markdown Version">markdown</a>
+  </p>
+  <p class="credits">
+    Inspired by <a href="https://github.com/akngs">akngs</a>'s <a href="https://wiki.g15e.com/pages/Home">wiki</a>.
+    Powered by <a href="https://github.com/kyungw00k/akwiki">akwiki</a>.
+  </p>
+</footer>
+{{ end }}

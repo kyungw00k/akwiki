@@ -1,0 +1,11 @@
+{{ define "toc" }}
+{{ if and .Site.Theme.Layout.TOC .TOC }}
+<nav aria-label="목차" data-area="toc">
+  <h2>목차</h2>
+  <ol>
+    <li><a href="#top">(맨 위로)</a></li>
+    {{ range .TOC }}<li class="toc-level-{{ .Level }}"><a href="#{{ .ID }}">{{ .Text }}</a></li>{{ end }}
+  </ol>
+</nav>
+{{ end }}
+{{ end }}

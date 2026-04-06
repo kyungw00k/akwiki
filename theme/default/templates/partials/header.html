@@ -1,0 +1,11 @@
+{{ define "header" }}
+<nav data-area="nav">
+  <a href="{{ .Site.Site.URL }}/pages/Home">위키 홈</a>
+  {{ if .Site.Theme.Edit.URL }}<a href="{{ editURL .Site.Theme.Edit.URL .Page.Name }}">Edit</a>{{ end }}
+</nav>
+<header data-area="header">
+  <h1>{{ if .Page.TitleKo }}{{ .Page.TitleKo }}{{ else }}{{ .Page.Title }}{{ end }}</h1>
+  <time>{{ formatDate .Page.CreatedAt }}{{ if not (sameDay .Page.CreatedAt .Page.ModifiedAt) }} (modified: {{ formatDate .Page.ModifiedAt }}){{ end }}</time>
+  {{ if .Page.Aliases }}<div class="aliases">{{ range .Page.Aliases }}<span>{{ . }}</span> {{ end }}</div>{{ end }}
+</header>
+{{ end }}

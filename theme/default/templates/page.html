@@ -1,0 +1,32 @@
+{{ define "page" }}
+<!DOCTYPE html>
+<html lang="{{ .Site.Site.Language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="base-url" content="{{ .Site.Site.URL }}">
+  <title>{{ .Page.Title }}{{ if .Site.Site.Title }} — {{ .Site.Site.Title }}{{ end }}</title>
+  <link rel="stylesheet" href="{{ .Site.Site.URL }}/assets/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+  {{ if .Site.Analytics.GA }}<script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Analytics.GA }}"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ .Site.Analytics.GA }}');</script>{{ end }}
+  <script type="application/ld+json">{{ .JSONLD }}</script>
+</head>
+<body>
+  <a href="#content" class="skip-link">본문으로 건너뛰기</a>
+  <div data-layout="wiki-page">
+    {{ template "header" . }}
+    {{ template "toc" . }}
+    <article id="content" data-content>
+      {{ .Content }}
+    </article>
+    {{ template "related" . }}
+    {{ template "backlinks" . }}
+    {{ template "footer" . }}
+  </div>
+  {{ if .Site.Theme.Layout.Search }}{{ template "search" . }}{{ end }}
+</body>
+</html>
+{{ end }}

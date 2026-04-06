@@ -1,0 +1,16 @@
+{{ define "related" }}
+{{ if and .Site.Theme.Layout.Related .Related }}
+<aside data-area="related">
+  {{ range $type, $pages := .Related }}
+  {{ if $pages }}
+  <section>
+    <h2>{{ relatedLabel $type }}</h2>
+    <ul>
+      {{ range $pages }}<li><a href="{{ $.Site.Site.URL }}/pages/{{ urlPathEscape .Name }}">{{ .Title }}</a></li>{{ end }}
+    </ul>
+  </section>
+  {{ end }}
+  {{ end }}
+</aside>
+{{ end }}
+{{ end }}
