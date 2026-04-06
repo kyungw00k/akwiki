@@ -235,18 +235,19 @@ func Build(rootDir, outDir string) error {
 		return fmt.Errorf("write search index: %w", err)
 	}
 
-	// 15. Generate index.html redirect to /pages/Home
-	indexHTML := `<!DOCTYPE html>
+	// 15. Generate index.html redirect to Home
+	homePath := cfg.Build.PageRoute + "/Home"
+	indexHTML := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="refresh" content="0; url=/pages/Home">
+  <meta http-equiv="refresh" content="0; url=%s">
   <title>Redirecting...</title>
 </head>
 <body>
-  <a href="/pages/Home">Redirecting to Home...</a>
+  <a href="%s">Redirecting to Home...</a>
 </body>
 </html>
-`
+`, homePath, homePath)
 	if err := os.WriteFile(filepath.Join(outDir, "index.html"), []byte(indexHTML), 0o644); err != nil {
 		return fmt.Errorf("write index.html: %w", err)
 	}
