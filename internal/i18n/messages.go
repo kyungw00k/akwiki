@@ -27,6 +27,11 @@ const (
 	MsgServeShort   Key = "MsgServeShort"
 	MsgServeServing Key = "MsgServeServing"
 
+	// Note
+	MsgNoteShort  Key = "MsgNoteShort"
+	MsgNoteAdded  Key = "MsgNoteAdded"
+	ErrNoteNoText Key = "ErrNoteNoText"
+
 	// Flags
 	FlagPortUsage Key = "FlagPortUsage"
 
@@ -52,6 +57,9 @@ var ko = map[Key]string{
 	MsgDevRebuilt:    "%s에 리빌드 완료",
 	MsgServeShort:    "빌드된 사이트 서빙",
 	MsgServeServing:  "%s를 http://localhost%s 에서 서빙 중",
+	MsgNoteShort:     "일지 작성",
+	MsgNoteAdded:     "작성 완료: %s",
+	ErrNoteNoText:    "내용을 입력하세요",
 	FlagPortUsage:    "서버 포트",
 	ErrConfigLoad:    "설정 로드 실패: %v",
 	ErrBuildFail:     "빌드 실패: %v",
@@ -74,6 +82,9 @@ var en = map[Key]string{
 	MsgDevRebuilt:    "Rebuilt in %s",
 	MsgServeShort:    "Serve the built site",
 	MsgServeServing:  "Serving %s at http://localhost%s",
+	MsgNoteShort:     "Write a note",
+	MsgNoteAdded:     "Note added to %s",
+	ErrNoteNoText:    "note text is required",
 	FlagPortUsage:    "server port",
 	ErrConfigLoad:    "failed to load config: %v",
 	ErrBuildFail:     "build failed: %v",

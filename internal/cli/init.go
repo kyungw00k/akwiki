@@ -44,6 +44,7 @@ func runInit(dir string) error {
 		{"Home.md", filepath.Join(dir, "pages", "Home.md")},
 		{"config.yml", filepath.Join(dir, ".akwiki", "config.yml")},
 		{"deploy.yml", filepath.Join(dir, ".github", "workflows", "deploy.yml")},
+		{"AGENTS.md", filepath.Join(dir, "AGENTS.md")},
 	}
 	for _, f := range files {
 		if _, err := os.Stat(f.dst); err == nil {
@@ -58,6 +59,17 @@ func runInit(dir string) error {
 			return err
 		}
 		fmt.Println(i18n.Tf(i18n.MsgInitCreate, f.dst))
+	}
+
+	// Create CLAUDE.md symlink to AGENTS.md
+	claudePath := filepath.Join(dir, "CLAUDE.md")
+	if _, err := os.Lstat(claudePath); err != nil {
+		if err := os.Symlink("AGENTS.md", claudePath); err != nil {
+			return err
+		}
+		fmt.Println(i18n.Tf(i18n.MsgInitCreate, claudePath))
+	} else {
+		fmt.Println(i18n.Tf(i18n.MsgInitSkip, claudePath))
 	}
 
 	fmt.Println(i18n.Tf(i18n.MsgInitDone, dir))
